@@ -6,7 +6,6 @@ Abstract base class for different dataset format adapters.
 
 from abc import ABC, abstractmethod
 from pathlib import Path
-from typing import Dict, List, Tuple, Optional, Iterator
 import polars as pl
 
 
@@ -29,7 +28,7 @@ class BaseDataAdapter(ABC):
             data_path: Path to the dataset file or directory
         """
         self.data_path = Path(data_path)
-        self._data: Optional[pl.DataFrame] = None
+        self._data: pl.DataFrame | None = None
     
     @abstractmethod
     def load_data(self) -> pl.DataFrame:
@@ -45,7 +44,7 @@ class BaseDataAdapter(ABC):
         pass
     
     @abstractmethod
-    def validate_data(self, data: pl.DataFrame) -> Dict[str, any]:
+    def validate_data(self, data: pl.DataFrame) -> dict[str, any]:
         """
         Validate the loaded data and return statistics.
         
@@ -78,7 +77,7 @@ class BaseDataAdapter(ABC):
                      train_ratio: float = 0.8, 
                      val_ratio: float = 0.1,
                      test_ratio: float = 0.1,
-                     seed: int = 42) -> Tuple[pl.DataFrame, pl.DataFrame, pl.DataFrame]:
+                     seed: int = 42) -> tuple[pl.DataFrame, pl.DataFrame, pl.DataFrame]:
         """
         Create train/validation/test splits from the data.
         
@@ -107,7 +106,7 @@ class BaseDataAdapter(ABC):
         
         return train_df, val_df, test_df
     
-    def get_language_stats(self) -> Dict[str, int]:
+    def get_language_stats(self) -> dict[str, int]:
         """
         Get statistics about languages in the dataset.
         
@@ -117,7 +116,7 @@ class BaseDataAdapter(ABC):
         data = self.get_data()
         return data.group_by("language").agg(pl.count()).to_dict(as_series=False)
     
-    def get_word_pairs(self, language: str) -> List[Tuple[str, str]]:
+    def get_word_pairs(self, language: str) -> list[tuple[str, str]]:
         """
         Extract word-IPA pairs for a specific language.
         

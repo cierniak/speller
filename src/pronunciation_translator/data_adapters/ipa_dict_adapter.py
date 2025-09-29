@@ -7,7 +7,6 @@ Handles tab-separated files with word->IPA mappings.
 
 import re
 from pathlib import Path
-from typing import Dict, List, Optional
 import polars as pl
 
 from .base import BaseDataAdapter
@@ -24,7 +23,7 @@ class IPADictAdapter(BaseDataAdapter):
     Example: "hello	/həˈloʊ/, /hɛˈloʊ/"
     """
     
-    def __init__(self, data_path: Path, language_code: Optional[str] = None):
+    def __init__(self, data_path: Path, language_code: str | None = None):
         """
         Initialize the IPA Dict adapter.
         
@@ -52,7 +51,7 @@ class IPADictAdapter(BaseDataAdapter):
         stem = file_path.stem
         return stem
     
-    def _parse_ipa_pronunciations(self, ipa_string: str) -> List[str]:
+    def _parse_ipa_pronunciations(self, ipa_string: str) -> list[str]:
         """
         Parse IPA pronunciation string and extract individual pronunciations.
         
@@ -136,7 +135,7 @@ class IPADictAdapter(BaseDataAdapter):
         
         return pl.DataFrame(data_rows)
     
-    def validate_data(self, data: pl.DataFrame) -> Dict[str, any]:
+    def validate_data(self, data: pl.DataFrame) -> dict[str, any]:
         """
         Validate the loaded ipa-dict data.
         
@@ -191,7 +190,7 @@ class IPADictAdapter(BaseDataAdapter):
         
         return validation_results
     
-    def get_language_files(self) -> List[Path]:
+    def get_language_files(self) -> list[Path]:
         """
         Get list of available language files in the data directory.
         
@@ -203,7 +202,7 @@ class IPADictAdapter(BaseDataAdapter):
         else:
             return list(self.data_path.glob("*.txt"))
     
-    def get_available_languages(self) -> List[str]:
+    def get_available_languages(self) -> list[str]:
         """
         Get list of available language codes.
         

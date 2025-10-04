@@ -1,5 +1,18 @@
 # Pronunciation Translation Project Plan
 
+## Important: Progress Tracking
+
+**When implementing any part of this plan, always update `PROGRESS.md` to reflect:**
+- Completed tasks (update checkboxes)
+- Implementation details and files created
+- Technical decisions made and their rationale
+- Any deviations from the original plan
+- Known issues or blockers encountered
+
+This keeps the project organized and maintains a clear record of what has been accomplished.
+
+---
+
 ## Project Overview
 Build a cross-linguistic pronunciation translation system that converts words from one language to phonetic spellings that approximate the pronunciation using another language's orthographic rules. The system uses IPA (International Phonetic Alphabet) as an intermediate representation and machine learning models for grapheme-to-phoneme and phoneme-to-grapheme conversion.
 

@@ -51,30 +51,25 @@ class IPADictAdapter(BaseDataAdapter):
         stem = file_path.stem
         return stem
     
-    def _parse_ipa_pronunciations(self, ipa_string: str) -> list[str]:
+    def _parse_ipa_pronunciations(self, ipa_string: str) -> str:
         """
-        Parse IPA pronunciation string and extract individual pronunciations.
-        
+        Parse IPA pronunciation string and extract the last pronunciation.
+
         Args:
             ipa_string: Raw IPA string from the file (e.g., "/həˈloʊ/, /hɛˈloʊ/")
-            
+
         Returns:
-            List of individual IPA pronunciations without slashes
+            The last IPA pronunciation without slashes, or empty string if none found
         """
-        # Remove whitespace and split by commas
-        pronunciations = []
-        
         # Find all IPA pronunciations enclosed in forward slashes
         ipa_pattern = r'/([^/]+)/'
         matches = re.findall(ipa_pattern, ipa_string.strip())
-        
-        for match in matches:
-            # Clean up the pronunciation
-            clean_ipa = match.strip()
-            if clean_ipa:
-                pronunciations.append(clean_ipa)
-        
-        return pronunciations
+
+        if matches:
+            # Return the last pronunciation, cleaned up
+            return matches[-1].strip()
+
+        return ""
     
     def load_data(self) -> pl.DataFrame:
         """
@@ -114,21 +109,20 @@ class IPADictAdapter(BaseDataAdapter):
                     
                     word, ipa_string = parts
                     word = word.strip()
-                    
-                    # Parse multiple pronunciations
-                    pronunciations = self._parse_ipa_pronunciations(ipa_string)
-                    
-                    if not pronunciations:
-                        print(f"Warning: No valid IPA pronunciations found in line {line_num} of {file_path}: {line}")
+
+                    # Parse pronunciation (last one if multiple)
+                    ipa = self._parse_ipa_pronunciations(ipa_string)
+
+                    if not ipa:
+                        print(f"Warning: No valid IPA pronunciation found in line {line_num} of {file_path}: {line}")
                         continue
-                    
-                    # Create a row for each pronunciation variant
-                    for ipa in pronunciations:
-                        data_rows.append({
-                            'word': word,
-                            'ipa': ipa,
-                            'language': language
-                        })
+
+                    # Create a row for the pronunciation
+                    data_rows.append({
+                        'word': word,
+                        'ipa': ipa,
+                        'language': language
+                    })
         
         if not data_rows:
             raise ValueError("No valid data rows found in the dataset")
@@ -181,9 +175,67 @@ class IPADictAdapter(BaseDataAdapter):
         if empty_ipa > 0:
             validation_results['warnings'].append(f"{empty_ipa} entries have empty IPA")
         
-        # Check IPA character validity (basic check for common IPA characters)
+        # Check IPA character validity (comprehensive check for IPA characters)
         ipa_chars = set(''.join(data['ipa'].to_list()))
-        common_ipa_chars = set('abcdefghijklmnopqrstuvwxyzɑæɒɔəɛɪɯɵʉʊʌʏaeiouɐɜɞɘɚɤɞɨʉʊyøœɶɑɒɓɗɖɢɠɡɦɥɧʜɲɴŋɳɸɥɰɹʀʁɬɭʃʧʤʒʑʐʝʎʟʢʡʘǀǃǁǂɱɸβfvθðszʃʒʂʐçʝɣχħʜʕɦʔʡʢˈˌːˑ̟̠̥̤̰̯̮̪̺̻̼̃̊̄̀́̂̌̊̃')
+        common_ipa_chars = set(
+            # Basic Latin alphabet
+            'abcdefghijklmnopqrstuvwxyz'
+            # Vowels
+            'ɑæɒɔəɛɪɯɵʉʊʌʏaeiouɐɜɞɘɚɤɨyøœɶ'
+            # Consonants (pulmonic)
+            'ɓɗɖɢɠɡɦɥɧʜɲɴŋɳɸɰɹʀʁɬɭʃʧʤʒʑʐʝʎʟʢʡɱβfvθðszʂçɣχħʕʔ'
+            # Consonants (additional)
+            'ɫ'  # velarized l
+            'ɺ'  # alveolar lateral flap
+            'ɾ'  # alveolar tap
+            'ʈ'  # retroflex stop
+            'ʙ'  # bilabial trill
+            'ɕ'  # alveolo-palatal fricative
+            'ʋ'  # labiodental approximant
+            # Vowels (nasalized and modified)
+            'ãõĩũẽ'  # nasalized vowels
+            'ĭ'  # non-syllabic
+            # Clicks
+            'ʘǀǃǁǂ'
+            # Suprasegmentals and stress
+            'ˈˌ'  # primary and secondary stress
+            'ːˑ'  # length marks (long, half-long)
+            # Diacritics (combining characters)
+            '̩'  # syllabic
+            '̆'  # extra-short
+            '̝'  # raised
+            '̞'  # lowered
+            '̚'  # no audible release
+            '̍'  # syllabic (alternative)
+            '̟̠'  # advanced, retracted
+            '̥̤'  # voiceless, breathy voiced
+            '̰'  # creaky voiced
+            '̯'  # non-syllabic
+            '̮'  # derhoticized
+            '̪'  # dental
+            '̺̻̼'  # apical, laminal, linguolabial
+            '̃'  # nasalized
+            '̊'  # voiceless (ring above)
+            '̄'  # mid-level tone
+            '̀́̂'  # tone marks (grave, acute, circumflex)
+            '̌'  # rising tone
+            '̑'  # stress/tone mark
+            # Suprasegmental modifiers
+            'ˠ'  # velarized
+            'ʰ'  # aspirated
+            'ʲ'  # palatalized
+            'ʶ'  # pharyngealized
+            'ʷ'  # labialized
+            '͡'  # tie bar (for affricates and double articulation)
+            # Prosodic marks
+            '.'  # syllable break
+            '|‖'  # minor and major prosodic breaks
+            '↗↘'  # rising and falling intonation
+            '‿⁀'  # linking marks
+            # Spacing
+            ' '  # space
+            ','  # pause/separator
+        )
         unusual_chars = ipa_chars - common_ipa_chars
         if unusual_chars:
             validation_results['warnings'].append(f"Found unusual characters in IPA: {unusual_chars}")

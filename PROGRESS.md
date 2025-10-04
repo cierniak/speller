@@ -5,8 +5,8 @@ Last updated: 2025-10-04
 ## Quick Status Overview
 
 - **Current Phase:** Phase 1 - Core Infrastructure & Data
-- **Overall Progress:** ~20% complete
-- **Next Steps:** Tokenizer infrastructure (1.3)
+- **Overall Progress:** ~35% complete
+- **Next Steps:** Dataset infrastructure (1.4)
 
 ---
 
@@ -59,21 +59,63 @@ Last updated: 2025-10-04
 
 ---
 
-### 🚧 1.3 Tokenizer Infrastructure
-**Status:** Not started
+### ✅ 1.3 Tokenizer Infrastructure
+**Status:** Complete
 
-- [ ] Character-level tokenizer base class
-- [ ] Per-language tokenizer generation
-- [ ] Special tokens support (`<PAD>`, `<SOS>`, `<EOS>`, `<UNK>`)
-- [ ] Tokenizer JSON format (`{lang}_spelling.json`, `{lang}_ipa.json`)
-- [ ] Auto-generation from training data
-- [ ] Tokenizer API integration
+- [x] Character-level tokenizer class
+- [x] Per-language tokenizer generation
+- [x] Special tokens support (`<PAD>`, `<SOS>`, `<EOS>`, `<UNK>`)
+- [x] Tokenizer JSON format (`{lang}_spelling.json`, `{lang}_ipa.json`)
+- [x] Auto-generation from training data via `TokenizerBuilder`
+- [x] Tokenizer API integration
+- [x] Comprehensive tests for encode/decode
 
-**Next steps:**
-1. Design tokenizer base class
-2. Implement vocabulary building from data adapter output
-3. Add encoding/decoding methods
-4. Test with German dataset
+**Implementation details:**
+
+**JSON Structure:**
+```json
+{
+  "language": "de",
+  "modality": "spelling",
+  "vocab": ["a", "b", "c", ...],
+  "special_tokens": {
+    "pad": "<PAD>",
+    "sos": "<SOS>",
+    "eos": "<EOS>",
+    "unk": "<UNK>"
+  }
+}
+```
+
+**Tokenizer class features:**
+- Load from JSON files
+- `encode(text)` - Convert text to token IDs
+- `decode(ids)` - Convert token IDs back to text
+- Special token handling (automatic SOS/EOS insertion)
+- Unknown character handling (<UNK> tokens)
+- Bidirectional mappings (char↔ID)
+
+**TokenizerBuilder features:**
+- Extract vocabularies from Polars DataFrames
+- Build from text lists
+- Automatic character extraction and sorting
+- Save to JSON with metadata
+
+**Files created:**
+- `src/pronunciation_translator/tokenizers/__init__.py`
+- `src/pronunciation_translator/tokenizers/tokenizer.py`
+- `src/pronunciation_translator/tokenizers/builder.py`
+- `build_tokenizers.py` (vocabulary extraction script)
+- `test_tokenizer.py` (comprehensive tests)
+- `tokenizers/de_spelling.json` (German orthography, 125 chars + 4 special = 129 tokens)
+- `tokenizers/de_ipa.json` (German IPA, 104 chars + 4 special = 108 tokens)
+
+**Key decisions made:**
+- Special tokens always placed at indices 0-3 (PAD, SOS, EOS, UNK)
+- Vocabulary sorted alphabetically for consistency
+- Unknown characters mapped to <UNK> token
+- `add_special_tokens` flag for encoding (useful for training vs inference)
+- `skip_special_tokens` flag for decoding (clean output)
 
 ---
 

@@ -181,57 +181,59 @@ class IPADictAdapter(BaseDataAdapter):
             # Basic Latin alphabet
             'abcdefghijklmnopqrstuvwxyz'
             # Vowels
-            'ɑæɒɔəɛɪɯɵʉʊʌʏaeiouɐɜɞɘɚɤɨyøœɶ'
+            '\u0251\u00e6\u0252\u0254\u0259\u025b\u026a\u026f\u0275\u0289\u028a\u028c\u028f'  # ɑæɒɔəɛɪɯɵʉʊʌʏ
+            'aeiou'
+            '\u0250\u025c\u025e\u0258\u025a\u0264\u0268y\u00f8\u0153\u0276'  # ɐɜɞɘɚɤɨyøœɶ
             # Consonants (pulmonic)
-            'ɓɗɖɢɠɡɦɥɧʜɲɴŋɳɸɰɹʀʁɬɭʃʧʤʒʑʐʝʎʟʢʡɱβfvθðszʂçɣχħʕʔ'
+            '\u0253\u0257\u0256\u0262\u0260\u0261\u0266\u0265\u0267\u029c\u0272\u0274\u014b\u0273\u0278\u0270\u0279\u0280\u0281\u026c\u026d\u0283\u02a7\u02a4\u0292\u0291\u0290\u029d\u028e\u029f\u02a2\u02a1\u0271\u03b2fv\u03b8\u00f0sz\u0282\u00e7\u0263\u03c7\u0127\u0295\u0294'  # ɓɗɖɢɠɡɦɥɧʜɲɴŋɳɸɰɹʀʁɬɭʃʧʤʒʑʐʝʎʟʢʡɱβfvθðszʂçɣχħʕʔ
             # Consonants (additional)
-            'ɫ'  # velarized l
-            'ɺ'  # alveolar lateral flap
-            'ɾ'  # alveolar tap
-            'ʈ'  # retroflex stop
-            'ʙ'  # bilabial trill
-            'ɕ'  # alveolo-palatal fricative
-            'ʋ'  # labiodental approximant
+            '\u026b'  # ɫ velarized l
+            '\u027a'  # ɺ alveolar lateral flap
+            '\u027e'  # ɾ alveolar tap
+            '\u0288'  # ʈ retroflex stop
+            '\u0299'  # ʙ bilabial trill
+            '\u0255'  # ɕ alveolo-palatal fricative
+            '\u028b'  # ʋ labiodental approximant
             # Vowels (nasalized and modified)
-            'ãõĩũẽ'  # nasalized vowels
-            'ĭ'  # non-syllabic
+            '\u00e3\u00f5\u0129\u0169\u1ebd'  # ãõĩũẽ nasalized vowels
+            '\u012d'  # ĭ non-syllabic
             # Clicks
-            'ʘǀǃǁǂ'
+            '\u0298\u01c0\u01c3\u01c1\u01c2'  # ʘǀǃǁǂ
             # Suprasegmentals and stress
-            'ˈˌ'  # primary and secondary stress
-            'ːˑ'  # length marks (long, half-long)
+            '\u02c8\u02cc'  # ˈˌ primary and secondary stress
+            '\u02d0\u02d1'  # ːˑ length marks (long, half-long)
             # Diacritics (combining characters)
-            '̩'  # syllabic
-            '̆'  # extra-short
-            '̝'  # raised
-            '̞'  # lowered
-            '̚'  # no audible release
-            '̍'  # syllabic (alternative)
-            '̟̠'  # advanced, retracted
-            '̥̤'  # voiceless, breathy voiced
-            '̰'  # creaky voiced
-            '̯'  # non-syllabic
-            '̮'  # derhoticized
-            '̪'  # dental
-            '̺̻̼'  # apical, laminal, linguolabial
-            '̃'  # nasalized
-            '̊'  # voiceless (ring above)
-            '̄'  # mid-level tone
-            '̀́̂'  # tone marks (grave, acute, circumflex)
-            '̌'  # rising tone
-            '̑'  # stress/tone mark
+            '\u0329'  # ̩ syllabic
+            '\u0306'  # ̆ extra-short
+            '\u031d'  # ̝ raised
+            '\u031e'  # ̞ lowered
+            '\u031a'  # ̚ no audible release
+            '\u030d'  # ̍ syllabic (alternative)
+            '\u031f\u0320'  # ̟̠ advanced, retracted
+            '\u0325\u0324'  # ̥̤ voiceless, breathy voiced
+            '\u0330'  # ̰ creaky voiced
+            '\u032f'  # ̯ non-syllabic
+            '\u032e'  # ̮ derhoticized
+            '\u032a'  # ̪ dental
+            '\u033a\u033b\u033c'  # ̺̻̼ apical, laminal, linguolabial
+            '\u0303'  # ̃ nasalized
+            '\u030a'  # ̊ voiceless (ring above)
+            '\u0304'  # ̄ mid-level tone
+            '\u0300\u0301\u0302'  # ̀́̂ tone marks (grave, acute, circumflex)
+            '\u030c'  # ̌ rising tone
+            '\u0311'  # ̑ stress/tone mark
             # Suprasegmental modifiers
-            'ˠ'  # velarized
-            'ʰ'  # aspirated
-            'ʲ'  # palatalized
-            'ʶ'  # pharyngealized
-            'ʷ'  # labialized
-            '͡'  # tie bar (for affricates and double articulation)
+            '\u02e0'  # ˠ velarized
+            '\u02b0'  # ʰ aspirated
+            '\u02b2'  # ʲ palatalized
+            '\u02b6'  # ʶ pharyngealized
+            '\u02b7'  # ʷ labialized
+            '\u0361'  # ͡ tie bar (for affricates and double articulation)
             # Prosodic marks
             '.'  # syllable break
-            '|‖'  # minor and major prosodic breaks
-            '↗↘'  # rising and falling intonation
-            '‿⁀'  # linking marks
+            '|\u2016'  # |‖ minor and major prosodic breaks
+            '\u2197\u2198'  # ↗↘ rising and falling intonation
+            '\u203f\u2040'  # ‿⁀ linking marks
             # Spacing
             ' '  # space
             ','  # pause/separator

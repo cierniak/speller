@@ -52,3 +52,54 @@ This will download the required datasets including the ipa-dict data in `data/ip
 
    ✅ All tests passed!
    ```
+
+3. **Build and Test Tokenizers:**
+
+   Tokenizers are character-level vocabularies stored as JSON files. Each language has two tokenizers: one for orthographic spelling and one for IPA pronunciations.
+
+   **Generate tokenizer files:**
+   ```bash
+   python3 build_tokenizers.py
+   ```
+
+   This extracts character vocabularies from the dataset and creates JSON files in `tokenizers/`:
+   - `de_spelling.json` - German orthography (125 chars)
+   - `de_ipa.json` - German IPA symbols (104 chars)
+
+   **Test tokenizers:**
+   ```bash
+   python3 test_tokenizer.py
+   ```
+
+   This verifies:
+   - Encoding text to token IDs
+   - Decoding token IDs back to text
+   - Special token handling (`<PAD>`, `<SOS>`, `<EOS>`, `<UNK>`)
+   - Unknown character handling
+
+   Example output:
+   ```
+   Testing German spelling tokenizer...
+     Loaded: Tokenizer(language=de, modality=spelling, vocab_size=129)
+
+     Word: 'Straße'
+     Encoded: [1, 44, 71, 69, 52, 84, 56, 2]
+     Decoded: 'Straße'
+
+   ✅ All tests passed!
+   ```
+
+   **Tokenizer structure:**
+   ```
+   tokenizers/              # Generated JSON files (gitignored)
+   ├── de_spelling.json     # German orthography vocabulary
+   ├── de_ipa.json          # German IPA vocabulary
+   └── ...                  # Other languages as needed
+   ```
+
+   Each tokenizer JSON contains:
+   - Language code and modality (spelling/ipa)
+   - Sorted character vocabulary
+   - Special token definitions
+
+   Tokenizers are loaded at training and inference time to ensure consistent vocabulary.
